@@ -1,0 +1,24 @@
+
+
+.gameOfLife h1 {
+  margin: 100px 0;
+}
+
+.gameOfLife button {
+  padding: 10px 15px;
+}
+
+.board {
+  width: fit-content;
+  margin: 20px auto;
+  display: grid;
+
+  border: 2px solid black;
+}
+
+.square {
+  width: 25px;
+  height: 25px;
+  border: 1px solid black;
+
+}
