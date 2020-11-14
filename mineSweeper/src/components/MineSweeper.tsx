@@ -45,7 +45,6 @@ const MineSweeper = () => {
 
 
 	const onSquareClick = (event: MouseEvent, i: number, j: number) => {
-		console.log(event.currentTarget.parentElement?.children);
 		event.currentTarget.classList.remove('hide');
 
 		if (event.currentTarget.textContent === '0') {
