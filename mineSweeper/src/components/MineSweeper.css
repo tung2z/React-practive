@@ -1,6 +1,6 @@
 .mineSweeper .board {
   display: grid;
-  grid-template-columns: repeat(20, 1fr);
+  /* grid-template-columns: repeat(20, 1fr); */
   width: fit-content;
   margin: 100px auto;
   border: 1px solid black;
@@ -16,8 +16,22 @@
   height: 50px;
   border-collapse: separate;
   background-color: white;
+
 }
 
 .mineSweeper .board .mine {
   background-color: red;
+}
+
+
+
+
+.mineSweeper .board .hide {
+  background-color: bisque;
+  color: bisque;
+}
+
+.mineSweeper .board .flag {
+  background-color: orange;
+  color: orange;
 }
