@@ -27,26 +27,18 @@ const Table = () => {
 	);
 	const [searchedUsers, setSearchedUsers] = useState(formatedUsers);
 	const [currentPagi, setCurrentPagi] = useState(0);
-	const [users, setUsers]: any = useState(
-		searchedUsers.slice(currentPagi * 10, currentPagi * 10 + 9)
-	);
+	const [users, setUsers]: any = useState(searchedUsers.slice(0, 10));
 
-	const onSearchChange =(e: any) => {
-		setCurrentPagi(0);
+	const onSearchChange = (e: any) => {
 		let filterUsers = formatedUsers.filter(
-			(user: any) =>
-				Object.values(user)?.filter(
-					(item: any) =>
-						item
-							.toString()
-							.toLowerCase()
-							.indexOf(e.target.value.toLowerCase()) !== -1
+			user =>
+				Object.values(user)?.filter(item =>
+					item.toString().toLowerCase().includes(e.target.value.toLowerCase())
 				).length !== 0
 		);
-		
+		setCurrentPagi(0);
 		setSearchedUsers(filterUsers);
-		setUsers(filterUsers.slice(currentPagi * 10, currentPagi * 10 + 9));
-		
+		setUsers(filterUsers.slice(0, 10));
 	};
 
 	const onSortChange = (e: any) => {
@@ -67,13 +59,13 @@ const Table = () => {
 			return 0;
 		});
 		setSearchedUsers(sortedUsers);
-		setCurrentPagi(0)
-		setUsers(sortedUsers.slice(currentPagi * 10, currentPagi * 10 + 9))
+		setCurrentPagi(0);
+		setUsers(sortedUsers.slice(0, 10));
 	};
 
 	const onChangePagi = (index: number) => {
 		setCurrentPagi(index);
-		setUsers(searchedUsers.slice(index * 10, index * 10 + 9));
+		setUsers(searchedUsers.slice(index * 10, (index + 1) * 10));
 	};
 
 	const onPrevClick = () => {
@@ -81,7 +73,7 @@ const Table = () => {
 			return;
 		}
 		setCurrentPagi(currentPagi - 1);
-		setUsers(searchedUsers.slice((currentPagi - 1) * 10, currentPagi * 10 - 1));
+		setUsers(searchedUsers.slice((currentPagi - 1) * 10, currentPagi * 10));
 	};
 
 	const onNextClick = () => {
@@ -90,33 +82,36 @@ const Table = () => {
 		}
 		setCurrentPagi(currentPagi + 1);
 		setUsers(
-			searchedUsers.slice((currentPagi + 1) * 10, (currentPagi + 2) * 10 - 1)
+			searchedUsers.slice((currentPagi + 1) * 10, (currentPagi + 2) * 10 )
 		);
 	};
 
 	return (
-		<div className="container mt-3">
+		<div className="container mt-3 mx-auto">
 			<div className="form-inline mb-2">
 				<div className="input-group">
 					<div className="input-group-prepend">
-						<span className="input-group-text">Search</span>
+						<label className="input-group-text" htmlFor="search">
+							Search
+						</label>
 					</div>
 					<input
 						type="text"
 						className="form-control"
+						id="search"
 						onChange={e => onSearchChange(e)}
 						placeholder="Enter anything..."
 					/>
 				</div>
 				<div className="input-group col-3">
 					<div className="input-group-prepend">
-						<label className="input-group-text" htmlFor="inputGroupSelect01">
+						<label className="input-group-text" htmlFor="sort">
 							Sort by
 						</label>
 					</div>
 					<select
 						className="custom-select"
-						id="inputGroupSelect01"
+						id="sort"
 						onChange={e => onSortChange(e)}
 					>
 						{Object.keys(formatedUsers[0]).map((item, index) => (
@@ -127,7 +122,7 @@ const Table = () => {
 					</select>
 				</div>
 			</div>
-			<table className="table mx-auto ">
+			<table className="table  table-striped">
 				<thead>
 					<tr>
 						{Object.keys(formatedUsers[0]).map((item, index) => (
@@ -163,7 +158,7 @@ const Table = () => {
 								className={`page-item  ${index === currentPagi && 'active'}`}
 								key={index}
 							>
-								<p className="page-link " onClick={() => onChangePagi(index)}>
+								<p className="page-link" onClick={() => onChangePagi(index)}>
 									{index + 1}
 								</p>
 							</li>
