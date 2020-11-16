@@ -1,0 +1,33 @@
+.SudokuApp {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	width: fit-content;
+	margin: 200px auto;
+	border: 5px solid black;
+  border-collapse: collapse;
+  border-radius: 5px;
+}
+
+.SudokuApp .item {
+	border: 1px solid black;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+}
+
+.SudokuApp .square {
+  border: none;
+	border: .2px solid black;
+	cursor: pointer;
+	outline: none;
+	width: 50px;
+	height: 50px;
+	caret-color: transparent;
+  font-size: 22px;
+  text-align: center;
+}
+
+.SudokuApp .hide {
+  color: transparent;
+}
+
+.selected {background-color: rgb(216, 216, 216);}
