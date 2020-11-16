@@ -42,16 +42,19 @@ const MineSweeper = () => {
 	// console.log(board);
 	// console.log(rule(board));
 
-
-
-	const onSquareClick = (event: MouseEvent, i: number, j: number) => {
+	const onSquareClick = (
+		event: MouseEvent,
+		square: number,
+		i: number,
+		j: number
+	) => {
 		event.currentTarget.classList.remove('hide');
-
+		// console.log(event.currentTarget.parentElement?.style.backgroundColor);
 		if (event.currentTarget.textContent === '0') {
 			neighbor
 				.filter(item => {
-					if(board[i + item[0]]) {
-					return	board[i + item[0]][j + item[1]] > -1
+					if (board[i + item[0]]) {
+						return board[i + item[0]][j + item[1]] > -1;
 					}
 				})
 				.forEach(item => {
@@ -59,38 +62,46 @@ const MineSweeper = () => {
 						(i + item[0]) * width + j + item[1]
 					]?.classList.remove('hide');
 				});
+		} else if (event.currentTarget.textContent === '9') {
+			console.log(event);
+			event.currentTarget.parentElement?.classList.add('gameover');
+			console.log(event.currentTarget.parentElement?.classList);
 		}
+
+		event.currentTarget.textContent = `${square}`;
 	};
 
-	const checkLose = () => {
-
-	} 
+	const checkLose = () => {};
 
 	const onSquareRightClick = (event: any) => {
-		event.preventDefault()
+		event.preventDefault();
 		event.currentTarget.classList.add('flag');
-	}
+	};
 
-
-	const onSquareDbClick = (event: any, i: number, j: number) => {
-
+	const onSquareDbClick = (
+		event: any,
+		square: number,
+		i: number,
+		j: number
+	) => {
 		event.currentTarget.classList.remove('hide');
 		neighbor
-				.filter(item => {
-					if(board[i + item[0]]) {
-					return	board[i + item[0]][j + item[1]] > -1
-					}
-				})
-				.forEach(item => {
-					event.currentTarget.parentElement?.children[
-						(i + item[0]) * width + j + item[1]
-					]?.classList.remove('hide');
-				});
-	}
+			.filter(item => {
+				if (board[i + item[0]]) {
+					return board[i + item[0]][j + item[1]] > -1;
+				}
+			})
+			.forEach(item => {
+				event.currentTarget.parentElement?.children[
+					(i + item[0]) * width + j + item[1]
+				]?.classList.remove('hide');
+			});
+
+		event.currentTarget.textContent = `${square}`;
+	};
 
 	useEffect(() => {
 		setBoard(rule(board));
-		return () => {};
 	}, []);
 
 	return (
@@ -104,12 +115,10 @@ const MineSweeper = () => {
 						<div
 							key={i * width + j + 1}
 							className={`square ${square === 9 ? 'mine' : ''} hide`}
-							onClick={event => onSquareClick(event, i, j)}
+							onClick={event => onSquareClick(event, square, i, j)}
 							onContextMenu={onSquareRightClick}
-							onDoubleClick={event=> onSquareDbClick(event, i, j)}
-						>
-							{square}
-						</div>
+							onDoubleClick={event => onSquareDbClick(event, square, i, j)}
+					>{square}</div>
 					))
 				)}
 			</div>
