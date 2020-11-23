@@ -6,7 +6,7 @@ interface IButtonProps {
 
 const Button: React.FunctionComponent<IButtonProps> = (props) => {
 
-  return <button className="btn btn-primary">{props.children}</button>;
+  return <button className="btn btn-primary ml-1">{props.children}</button>;
 };
 
 export default Button;

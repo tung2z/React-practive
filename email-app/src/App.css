@@ -1,1 +1,17 @@
 
+.App {
+  font-size: 14px;
+  overflow: hidden;
+
+}
+
+.link {
+  text-decoration: none;
+  color: black;
+  text-overflow: ellipsis;
+
+}
+.link:hover {
+  text-decoration: none;
+}
+

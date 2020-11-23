@@ -1,0 +1,19 @@
+.link:hover {
+	text-decoration: none;
+	color: rgb(68, 68, 68);
+}
+
+.link {
+	color: rgb(68, 68, 68);
+}
+
+.imgBor {
+	width: 60%;
+	max-height: 500px;
+	overflow: hidden;
+}
+.imgBor img {
+	
+	max-width: 100%;
+	height: auto;
+}
