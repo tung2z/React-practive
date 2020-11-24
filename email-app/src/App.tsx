@@ -1,7 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { Messages, Contacts, Perferences } from './pages';
-import { Header } from './components';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -11,7 +10,7 @@ function App() {
 			<Router>
 				<Switch>
 				<Route exact path="/">
-						<Messages />
+						<Redirect to="/messages" />
 					</Route>
 					<Route path="/messages">
 						<Messages />

@@ -1,22 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RecipeForm, RecipeCard, DisplayRecipe } from '../components';
-import {
-	Switch,
-	Link,
-	Route,
-	useRouteMatch,
-} from 'react-router-dom';
+import { Switch, Link, Route, useRouteMatch } from 'react-router-dom';
 import './Recipe.css';
 
 interface IRecipeProps {
 	data: any[];
 	onDeleteRecipe: (value: any) => void;
-	onAddRecipe: (value: any) => void
+	onHandleRecipe: (value: any) => void;
+	onAddInShopCard: (value: any) => void;
 }
 
 const Recipe: React.FunctionComponent<IRecipeProps> = props => {
-	const { data, onDeleteRecipe, onAddRecipe } = props;
+	const { data, onDeleteRecipe, onHandleRecipe, onAddInShopCard } = props;
 	const { path, url } = useRouteMatch();
+	const [activeCard, setActiveCard] = useState(-1);
+	const handleActiveCard = (index: number) => {
+		setActiveCard(index)
+	}
 
 	return (
 		<div className="row mt-5">
@@ -29,8 +29,8 @@ const Recipe: React.FunctionComponent<IRecipeProps> = props => {
 				<hr />
 				<ul className="list-group">
 					{data.map((item: any, index) => (
-						<Link to={`${url}/${item.id}`} className="link" key={index}>
-							<RecipeCard data={item} />
+						<Link to={`${url}/${item.id}`} className="link" key={index} onClick={() => handleActiveCard(index)}>
+							<RecipeCard data={item} active={activeCard === index}/>
 						</Link>
 					))}
 				</ul>
@@ -41,13 +41,17 @@ const Recipe: React.FunctionComponent<IRecipeProps> = props => {
 						<h2>Please select a Recipe!</h2>
 					</Route>
 					<Route path={`${path}/new-recipe`}>
-						<RecipeForm data={[]} onAddRecipe={onAddRecipe}/>
+						<RecipeForm data={[]} onHandleRecipe={onHandleRecipe} />
 					</Route>
 					<Route path={`${path}/:id/edit-recipe`}>
-						<RecipeForm data={data} onAddRecipe={onAddRecipe}/>
+						<RecipeForm data={data} onHandleRecipe={onHandleRecipe} />
 					</Route>
 					<Route path={`${path}/:id`}>
-						<DisplayRecipe data={data} onDeleteRecipe={onDeleteRecipe} />
+						<DisplayRecipe
+							data={data}
+							onDeleteRecipe={onDeleteRecipe}
+							onAddInShopCard={onAddInShopCard}
+						/>
 					</Route>
 				</Switch>
 			</div>

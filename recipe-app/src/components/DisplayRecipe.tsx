@@ -4,11 +4,12 @@ import { useParams, Link, useRouteMatch } from 'react-router-dom';
 interface IDisplayRecipeProps {
 	data: any[];
 	onDeleteRecipe: (value: any) => void;
+	onAddInShopCard: (value: any) => void;
 }
 
 const DisplayRecipe: React.FunctionComponent<IDisplayRecipeProps> = props => {
 	const { id } = useParams<{ id: string }>();
-	const { data, onDeleteRecipe } = props;
+	const { data, onDeleteRecipe, onAddInShopCard } = props;
 	const item = data.find(item => item.id === Number(id));
 	const { url } = useRouteMatch();
 
@@ -29,7 +30,11 @@ const DisplayRecipe: React.FunctionComponent<IDisplayRecipeProps> = props => {
 					Dropdown button
 				</button>
 				<div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					<Link to="/shopping-list" className="dropdown-item">
+					<Link
+						to="/shopping-list"
+						className="dropdown-item"
+						onClick={() => onAddInShopCard(item.ingredients)}
+					>
 						Goto Shopping
 					</Link>
 					<Link to={`${url}/edit-recipe`} className="dropdown-item">
@@ -45,22 +50,13 @@ const DisplayRecipe: React.FunctionComponent<IDisplayRecipeProps> = props => {
 				</div>
 			</div>
 			<p className="mt-2">{item.description}</p>
-			<table className="table table-bordered">
-				<thead>
-					<tr>
-						<th scope="col">Ingrement</th>
-						<th scope="col ">Amount</th>
-					</tr>
-				</thead>
-				<tbody>
-					{Object.keys(item.ingrements).map((i, index) => (
-						<tr key={index}>
-							<td>{i}</td>
-							<td>{item.ingrements[i]}</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
+			<ul className="list-group">
+				{item.ingredients.map((i: any, index: any) => (
+					<li className="list-group-item" key={index}>
+						{i[0]} -- {i[1]}
+					</li>
+				))}
+			</ul>
 		</div>
 	);
 };

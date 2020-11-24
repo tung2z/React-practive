@@ -1,6 +1,5 @@
-import Login from './Login'
-import Messages from './Messages'
-import Contacts from './Contacts'
-import Perferences from './Preferences'
+import Messages from './Messages';
+import Contacts from './Contacts';
+import Perferences from './Preferences';
 
-export {Login, Messages, Contacts, Perferences}
+export { Messages, Contacts, Perferences };

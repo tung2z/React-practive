@@ -20,17 +20,19 @@ const Messages = () => {
 		})
 	);
 	const { path } = useRouteMatch();
-	const [userMessages, setUserMessages] = useState(formatMessages.filter(item => item.to === USERS[0]))
-	let history = useHistory()
+	const [userMessages, setUserMessages] = useState(
+		formatMessages.filter(item => item.to === USERS[0])
+	);
+	let history = useHistory();
 
-		const handleSelect = (e: any) => {
-			setUserMessages(formatMessages.filter(item => item.to === e.target.value))
-			history.push('/messages')
-		}
+	const handleSelect = (e: any) => {
+		setUserMessages(formatMessages.filter(item => item.to === e.target.value));
+		history.push('/messages');
+	};
 
 	return (
 		<>
-			<Header users={USERS} handleSelect={handleSelect}/>
+			<Header users={USERS} handleSelect={handleSelect} />
 			<div className="row">
 				<div className="col col-2">
 					<EmailBox list={FORDER} />

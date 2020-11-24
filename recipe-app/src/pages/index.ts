@@ -1,4 +1,4 @@
-import Recipe from './Recipe'
-import ShoppingList from './ShoppingList'
+import Recipe from './Recipe';
+import ShoppingList from './ShoppingList';
 
-export {Recipe, ShoppingList} 
+export { Recipe, ShoppingList };

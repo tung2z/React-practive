@@ -1,58 +1,86 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 interface IRecipeFormProps {
 	data: any;
-	onAddRecipe: (value: any) => void;
+	onHandleRecipe: (value: any) => void;
 }
 
 const RecipeForm: React.FunctionComponent<IRecipeFormProps> = props => {
-	const { data, onAddRecipe } = props;
+	const { data, onHandleRecipe } = props;
 	const { url } = useRouteMatch();
 	let id = url.split('/')[2];
 	let item = data.find((item: { id: number }) => item.id === Number(id)) || {};
 	let history = useHistory();
 
-	const [ingrements, setIngrements] = useState(item.ingrements || {});
+	const deleteIngredients = (index: number) => {
+		let temp = [];
+		if (index === -1) {
+			temp = [...formik.values.ingredients, []];
+		} else {
+			temp = [
+				...formik.values.ingredients.slice(0, index),
+				...formik.values.ingredients.slice(index + 1),
+			];
+		}
+		formik.setValues({
+			...formik.values,
+			ingredients: temp,
+		});
+	};
 
 	const formik = useFormik({
 		initialValues: {
-			id: item.id,
+			id: item.id || 0,
 			name: item.name,
 			imageURL: item.imageURL,
 			description: item.description,
-			ingrements: item.ingrements || {},
-			enabled: false,
+			ingredients: item.ingredients || [],
+			disable: true,
 		},
 		validationSchema: yup.object().shape({
 			name: yup.string().required(),
 			imageURL: yup.string().url('Wrong URL').required(),
 			description: yup.string().required(),
+			ingredients: yup.array().of(yup.array<[string, number]>().required()),
 		}),
 		onSubmit: values => {
-			values.ingrements.tomato += 1;
-			onAddRecipe(values);
+			onHandleRecipe(values);
 			history.push(`/recipes${data.id ? `/${data.id}` : ''}`);
 		},
 	});
 	return (
-		<form onSubmit={formik.handleSubmit}>
+		<form
+			onSubmit={formik.handleSubmit}
+			onReset={() =>
+				formik.setValues({
+					...formik.values,
+					name: '',
+					imageURL: '',
+					description: '',
+					ingredients: [],
+					disable: true,
+				})
+			}
+		>
 			{formik.values.name &&
 				formik.values.imageURL &&
 				!formik.errors.imageURL &&
 				formik.values.description &&
-				(formik.values.enabled = true)}
+				(formik.values.disable = false)}
+			{/* {console.log(formik.errors)}
+			{formik.errors !== {} && formik.values && (formik.values.disable = false)} */}
 			{(formik.errors.name ||
 				formik.errors.imageURL ||
 				formik.errors.description) &&
-				(formik.values.enabled = false)}
+				(formik.values.disable = true)}
 			<div className="form-group">
 				<button
 					type="submit"
 					className="btn btn-success"
-					disabled={!formik.values.enabled}
+					disabled={formik.values.disable}
 				>
 					Save
 				</button>
@@ -103,24 +131,40 @@ const RecipeForm: React.FunctionComponent<IRecipeFormProps> = props => {
 					value={formik.values.description}
 				></textarea>
 			</div>
-			{Object.keys(ingrements).map((i, index) => (
-				<div className="form-inline d-flex justify-content-between mt-2" key={index}>
+			{formik.values.ingredients.map((i: any, index: any) => (
+				<div
+					className="form-inline d-flex justify-content-between mt-2"
+					key={index}
+				>
 					<input
 						type="text"
 						className="form-control mr-5 col-6"
-						value={i}
+						name={`ingredients[${index}][0]`}
+						onChange={formik.handleChange}
+						value={formik.values.ingredients[index][0]}
 					/>
 					<input
 						type="text"
 						className="form-control mr-2 col-1"
-						value={item.ingrements[i]}
+						name={`ingredients[${index}][1]`}
+						onChange={formik.handleChange}
+						value={formik.values.ingredients[index][1]}
 					/>
-					<button type="button" className="btn btn-danger ">
+					<button
+						type="button"
+						className="btn btn-danger "
+						onClick={() => deleteIngredients(index)}
+					>
 						X
 					</button>
 				</div>
 			))}
-			<button type="button" className="btn btn-success mt-2">
+
+			<button
+				type="button"
+				className="btn btn-success mt-2"
+				onClick={() => deleteIngredients(-1)}
+			>
 				Add Ingrement
 			</button>
 		</form>
