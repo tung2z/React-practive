@@ -14,13 +14,16 @@ interface IshoppingList {
 	[prop: string]: number;
 }
 
-const App = () => {
-	const [data, setData] = useState(Data);
-	const object: IshoppingList = {
-		fsdfs: 2,
-	};
-	object['fsdfsd'] = 2;
+interface IDataItem {
+	id: number;
+	name: string;
+	imageURL: string;
+	description: string;
+	ingredients: IshoppingList;
+}
 
+const App = () => {
+	const [data, setData] = useState<IDataItem[]>(Data);
 	const [shoppingList, setShoppingList] = useState<IshoppingList>({});
 
 	const onHandleRecipe = ({
@@ -33,10 +36,10 @@ const App = () => {
 		let item = { id, name, imageURL, description, ingredients };
 		let tempData = [];
 		if (id === 0) {
-			item.id = data[data.length - 1].id + 1;
+			item.id = data[data.length - 1].id ? data[data.length - 1].id + 1 : 0;
 			tempData = [...data, item];
 		} else {
-			let index = data.findIndex(item => item.id === Number(id));
+			let index = data.findIndex(item => item.id === id);
 			tempData = [...data.slice(0, index), item, ...data.slice(index + 1)];
 		}
 
@@ -48,14 +51,18 @@ const App = () => {
 		setData([...data.slice(0, index), ...data.slice(index + 1)]);
 	};
 
-	const handleIngredients = (value: any) => {
-		if (typeof value === 'string') {
+	const handleIngredients = (value: any, action: string) => {
+		if (action === 'delete') {
 			delete shoppingList[value];
 		} else {
 			Object.keys(value).forEach(prop => {
-				shoppingList[prop] = shoppingList[prop]
-					? shoppingList[prop] + value[prop]
-					: value[prop];
+				if (action === 'update') {
+					shoppingList[prop] = value[prop];
+				} else {
+					shoppingList[prop] = shoppingList[prop]
+						? shoppingList[prop] + value[prop]
+						: value[prop];
+				}
 			});
 		}
 

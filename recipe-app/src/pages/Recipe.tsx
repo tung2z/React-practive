@@ -7,7 +7,7 @@ interface IRecipeProps {
 	data: any[];
 	onDeleteRecipe: (value: any) => void;
 	onHandleRecipe: (value: any) => void;
-	handleIngredients: (value: any) => void;
+	handleIngredients: (value: any, from: string) => void;
 }
 
 const Recipe: React.FunctionComponent<IRecipeProps> = props => {
@@ -15,8 +15,8 @@ const Recipe: React.FunctionComponent<IRecipeProps> = props => {
 	const { path, url } = useRouteMatch();
 	const [activeCard, setActiveCard] = useState(-1);
 	const handleActiveCard = (index: number) => {
-		setActiveCard(index)
-	}
+		setActiveCard(index);
+	};
 
 	return (
 		<div className="row mt-5">
@@ -29,8 +29,13 @@ const Recipe: React.FunctionComponent<IRecipeProps> = props => {
 				<hr />
 				<ul className="list-group">
 					{data.map((item: any, index) => (
-						<Link to={`${url}/${item.id}`} className="link" key={index} onClick={() => handleActiveCard(index)}>
-							<RecipeCard data={item} active={activeCard === index}/>
+						<Link
+							to={`${url}/${item.id}`}
+							className="link"
+							key={index}
+							onClick={() => handleActiveCard(index)}
+						>
+							<RecipeCard data={item} active={activeCard === index} />
 						</Link>
 					))}
 				</ul>

@@ -57,7 +57,6 @@ const RecipeForm: React.FunctionComponent<IRecipeFormProps> = props => {
 					ingredientsObject[item[0]] = Number(item[1]) ? Number(item[1]) : 0;
 				}
 			});
-
 			onHandleRecipe({ ...values, ingredients: ingredientsObject });
 			history.push(`/recipes${data.id ? `/${data.id}` : ''}`);
 		},
@@ -165,7 +164,7 @@ const RecipeForm: React.FunctionComponent<IRecipeFormProps> = props => {
 				className="btn btn-success mt-2"
 				onClick={() => handleFormikIngredients('')}
 			>
-				Add Ingrement
+				Add Ingredient
 			</button>
 		</form>
 	);

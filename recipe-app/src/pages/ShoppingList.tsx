@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import React from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 interface IShoppingListProps {
 	data: any;
-	handleIngredients: (values: any) => void;
+	handleIngredients: (values: any, action: string) => void;
 }
 interface IshoppingList {
 	[prop: string]: number;
@@ -27,7 +28,7 @@ const ShoppingList: React.FunctionComponent<IShoppingListProps> = props => {
 		onSubmit: values => {
 			let a: IshoppingList = {};
 			a[values.ingredient] = Number(values.amount);
-			handleIngredients(a);
+			handleIngredients(a, 'update');
 			formik.resetForm();
 		},
 	});
@@ -88,7 +89,7 @@ const ShoppingList: React.FunctionComponent<IShoppingListProps> = props => {
 						className="btn btn-danger mr-1"
 						onClick={() => {
 							formik.resetForm();
-							handleIngredients(formik.values.ingredient);
+							handleIngredients(formik.values.ingredient, 'delete');
 						}}
 					>
 						Delete

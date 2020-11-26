@@ -4,7 +4,7 @@ import { useParams, Link, useRouteMatch } from 'react-router-dom';
 interface IDisplayRecipeProps {
 	data: any[];
 	onDeleteRecipe: (value: any) => void;
-	handleIngredients: (value: any) => void;
+	handleIngredients: (value: any, action: string) => void;
 }
 
 const DisplayRecipe: React.FunctionComponent<IDisplayRecipeProps> = props => {
@@ -33,7 +33,7 @@ const DisplayRecipe: React.FunctionComponent<IDisplayRecipeProps> = props => {
 					<Link
 						to="/shopping-list"
 						className="dropdown-item"
-						onClick={() => handleIngredients(item.ingredients)}
+						onClick={() => handleIngredients(item.ingredients, 'addAll')}
 					>
 						Goto Shopping
 					</Link>
