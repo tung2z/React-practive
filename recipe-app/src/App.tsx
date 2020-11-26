@@ -10,11 +10,18 @@ import {
 import Data from './utils/data.json';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+interface IshoppingList {
+	[prop: string]: number;
+}
 
 const App = () => {
 	const [data, setData] = useState(Data);
+	const object: IshoppingList = {
+		fsdfs: 2,
+	};
+	object['fsdfsd'] = 2;
 
-	const [shoppingList, setShoppingList] = useState([['tomato', 2]]);
+	const [shoppingList, setShoppingList] = useState<IshoppingList>({});
 
 	const onHandleRecipe = ({
 		id,
@@ -24,14 +31,16 @@ const App = () => {
 		ingredients,
 	}: any) => {
 		let item = { id, name, imageURL, description, ingredients };
-
+		let tempData = [];
 		if (id === 0) {
 			item.id = data[data.length - 1].id + 1;
-			setData([...data, item]);
+			tempData = [...data, item];
 		} else {
 			let index = data.findIndex(item => item.id === Number(id));
-			setData([...data.slice(0, index), item, ...data.slice(index + 1)]);
+			tempData = [...data.slice(0, index), item, ...data.slice(index + 1)];
 		}
+
+		setData(tempData);
 	};
 
 	const onDeleteRecipe = (value: any) => {
@@ -39,46 +48,18 @@ const App = () => {
 		setData([...data.slice(0, index), ...data.slice(index + 1)]);
 	};
 
-	const handleClick = (value: any) => {
-		if (!shoppingList.find(item => item[0] === value.ingredient)) {
-			setShoppingList([
-				...shoppingList,
-				[value.ingredient, Number(value.amount)],
-			]);
+	const handleIngredients = (value: any) => {
+		if (typeof value === 'string') {
+			delete shoppingList[value];
 		} else {
-			let index = shoppingList.findIndex(item => item[0] === value.ingredient);
-			if (!value.amount) {
-				setShoppingList([
-					...shoppingList.slice(0, index),
-					...shoppingList.slice(index + 1),
-				]);
-			} else {
-				setShoppingList([
-					...shoppingList.slice(0, index),
-					[value.ingredient, Number(value.amount)],
-					...shoppingList.slice(index + 1),
-				]);
-			}
+			Object.keys(value).forEach(prop => {
+				shoppingList[prop] = shoppingList[prop]
+					? shoppingList[prop] + value[prop]
+					: value[prop];
+			});
 		}
-	};
 
-	const onAddInShopCard = (value: any) => {
-		let data: any = [...shoppingList];
-		value.forEach((item: any) => {
-			let index = shoppingList.findIndex(i => i[0] === item[0]);
-			if (index === -1) {
-				data = [...data, item];
-			} else {
-				console.log('object');
-				data = [
-					...data.slice(0, index),
-					[item[0], item[1] + shoppingList[index][1]],
-					...data.slice(index + 1),
-				];
-			}
-		});
-
-		setShoppingList(data);
+		setShoppingList(shoppingList);
 	};
 
 	return (
@@ -86,21 +67,23 @@ const App = () => {
 			<Router>
 				<Nav />
 				<Switch>
-					<Route exact path="/">
-						<Redirect to="/recipes" />
-					</Route>
+					<Redirect exact from="/" to="/recipes" />
 					<Route path="/recipes">
 						<Recipe
 							data={data}
 							onDeleteRecipe={onDeleteRecipe}
 							onHandleRecipe={onHandleRecipe}
-							onAddInShopCard={onAddInShopCard}
+							handleIngredients={handleIngredients}
 						/>
 					</Route>
 					<Route path="/shopping-list">
-						<ShoppingList data={shoppingList} handleClick={handleClick} />
+						<ShoppingList
+							data={shoppingList}
+							handleIngredients={handleIngredients}
+						/>
 					</Route>
 				</Switch>
+				<Route path={``}></Route>
 			</Router>
 		</div>
 	);

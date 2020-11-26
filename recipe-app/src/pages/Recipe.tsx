@@ -7,11 +7,11 @@ interface IRecipeProps {
 	data: any[];
 	onDeleteRecipe: (value: any) => void;
 	onHandleRecipe: (value: any) => void;
-	onAddInShopCard: (value: any) => void;
+	handleIngredients: (value: any) => void;
 }
 
 const Recipe: React.FunctionComponent<IRecipeProps> = props => {
-	const { data, onDeleteRecipe, onHandleRecipe, onAddInShopCard } = props;
+	const { data, onDeleteRecipe, onHandleRecipe, handleIngredients } = props;
 	const { path, url } = useRouteMatch();
 	const [activeCard, setActiveCard] = useState(-1);
 	const handleActiveCard = (index: number) => {
@@ -50,7 +50,7 @@ const Recipe: React.FunctionComponent<IRecipeProps> = props => {
 						<DisplayRecipe
 							data={data}
 							onDeleteRecipe={onDeleteRecipe}
-							onAddInShopCard={onAddInShopCard}
+							handleIngredients={handleIngredients}
 						/>
 					</Route>
 				</Switch>

@@ -4,11 +4,14 @@ import * as yup from 'yup';
 
 interface IShoppingListProps {
 	data: any;
-	handleClick: (values: any) => void;
+	handleIngredients: (values: any) => void;
+}
+interface IshoppingList {
+	[prop: string]: number;
 }
 
 const ShoppingList: React.FunctionComponent<IShoppingListProps> = props => {
-	const { data, handleClick } = props;
+	const { data, handleIngredients } = props;
 
 	const formik = useFormik({
 		initialValues: {
@@ -22,15 +25,17 @@ const ShoppingList: React.FunctionComponent<IShoppingListProps> = props => {
 			amount: yup.number().required('**Required'),
 		}),
 		onSubmit: values => {
-			handleClick(values);
+			let a: IshoppingList = {};
+			a[values.ingredient] = Number(values.amount);
+			handleIngredients(a);
 			formik.resetForm();
-    },
+		},
 	});
 
 	const onItemClick = (index: any, item: any) => {
 		formik.setValues({
-			ingredient: item[0],
-			amount: item[1],
+			ingredient: item,
+			amount: data[item],
 			showDelBtn: true,
 			active: index,
 		});
@@ -83,9 +88,7 @@ const ShoppingList: React.FunctionComponent<IShoppingListProps> = props => {
 						className="btn btn-danger mr-1"
 						onClick={() => {
 							formik.resetForm();
-							handleClick({
-								ingredient: formik.values.ingredient,
-							});
+							handleIngredients(formik.values.ingredient);
 						}}
 					>
 						Delete
@@ -98,14 +101,16 @@ const ShoppingList: React.FunctionComponent<IShoppingListProps> = props => {
 
 			<hr />
 			<ul className="list-group">
-				{data?.map((item: any, index: any) => (
+				{Object.keys(data).map((item: any, index: any) => (
 					<li
-						className={`list-group-item ${index===formik.values.active && 'active'}`}
+						className={`list-group-item ${
+							index === formik.values.active && 'active'
+						}`}
 						style={{ cursor: 'pointer' }}
 						key={index}
 						onClick={() => onItemClick(index, item)}
 					>
-						{item[0]} -- {item[1]}
+						{item} -- {data[item]}
 					</li>
 				))}
 			</ul>

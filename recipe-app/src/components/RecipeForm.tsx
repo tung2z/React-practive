@@ -12,12 +12,13 @@ const RecipeForm: React.FunctionComponent<IRecipeFormProps> = props => {
 	const { data, onHandleRecipe } = props;
 	const { url } = useRouteMatch();
 	let id = url.split('/')[2];
-	let item = data.find((item: { id: number }) => item.id === Number(id)) || {};
+	let targetRecipe =
+		data.find((item: { id: number }) => item.id === Number(id)) || {};
 	let history = useHistory();
 
-	const deleteIngredients = (index: number) => {
+	const handleFormikIngredients = (index: any) => {
 		let temp = [];
-		if (index === -1) {
+		if (index === '') {
 			temp = [...formik.values.ingredients, []];
 		} else {
 			temp = [
@@ -30,27 +31,38 @@ const RecipeForm: React.FunctionComponent<IRecipeFormProps> = props => {
 			ingredients: temp,
 		});
 	};
-
 	const formik = useFormik({
 		initialValues: {
-			id: item.id || 0,
-			name: item.name,
-			imageURL: item.imageURL,
-			description: item.description,
-			ingredients: item.ingredients || [],
-			disable: true,
+			id: targetRecipe.id || 0,
+			name: targetRecipe.name,
+			imageURL: targetRecipe.imageURL,
+			description: targetRecipe.description,
+			ingredients: targetRecipe.ingredients
+				? Object.keys(targetRecipe.ingredients)?.map(item => [
+						item,
+						targetRecipe.ingredients[item],
+				  ])
+				: [],
 		},
 		validationSchema: yup.object().shape({
 			name: yup.string().required(),
 			imageURL: yup.string().url('Wrong URL').required(),
 			description: yup.string().required(),
-			ingredients: yup.array().of(yup.array<[string, number]>().required()),
+			ingredients: yup.array(yup.array(yup.string().required())).required(),
 		}),
 		onSubmit: values => {
-			onHandleRecipe(values);
+			let ingredientsObject: any = {};
+			formik.values.ingredients.forEach(item => {
+				if (item[0]) {
+					ingredientsObject[item[0]] = Number(item[1]) ? Number(item[1]) : 0;
+				}
+			});
+
+			onHandleRecipe({ ...values, ingredients: ingredientsObject });
 			history.push(`/recipes${data.id ? `/${data.id}` : ''}`);
 		},
 	});
+
 	return (
 		<form
 			onSubmit={formik.handleSubmit}
@@ -61,31 +73,19 @@ const RecipeForm: React.FunctionComponent<IRecipeFormProps> = props => {
 					imageURL: '',
 					description: '',
 					ingredients: [],
-					disable: true,
 				})
 			}
 		>
-			{formik.values.name &&
-				formik.values.imageURL &&
-				!formik.errors.imageURL &&
-				formik.values.description &&
-				(formik.values.disable = false)}
-			{/* {console.log(formik.errors)}
-			{formik.errors !== {} && formik.values && (formik.values.disable = false)} */}
-			{(formik.errors.name ||
-				formik.errors.imageURL ||
-				formik.errors.description) &&
-				(formik.values.disable = true)}
 			<div className="form-group">
 				<button
 					type="submit"
 					className="btn btn-success"
-					disabled={formik.values.disable}
+					disabled={!(formik.dirty && formik.isValid)}
 				>
 					Save
 				</button>
-				<button type="reset" className="btn btn-secondary ml-1">
-					Cancel
+				<button type="reset" className="btn btn-danger ml-1">
+					Reset
 				</button>
 			</div>
 
@@ -131,7 +131,7 @@ const RecipeForm: React.FunctionComponent<IRecipeFormProps> = props => {
 					value={formik.values.description}
 				></textarea>
 			</div>
-			{formik.values.ingredients.map((i: any, index: any) => (
+			{formik.values.ingredients.map((prop: any, index: any) => (
 				<div
 					className="form-inline d-flex justify-content-between mt-2"
 					key={index}
@@ -153,7 +153,7 @@ const RecipeForm: React.FunctionComponent<IRecipeFormProps> = props => {
 					<button
 						type="button"
 						className="btn btn-danger "
-						onClick={() => deleteIngredients(index)}
+						onClick={() => handleFormikIngredients(index)}
 					>
 						X
 					</button>
@@ -163,7 +163,7 @@ const RecipeForm: React.FunctionComponent<IRecipeFormProps> = props => {
 			<button
 				type="button"
 				className="btn btn-success mt-2"
-				onClick={() => deleteIngredients(-1)}
+				onClick={() => handleFormikIngredients('')}
 			>
 				Add Ingrement
 			</button>

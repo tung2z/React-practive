@@ -4,12 +4,12 @@ import { useParams, Link, useRouteMatch } from 'react-router-dom';
 interface IDisplayRecipeProps {
 	data: any[];
 	onDeleteRecipe: (value: any) => void;
-	onAddInShopCard: (value: any) => void;
+	handleIngredients: (value: any) => void;
 }
 
 const DisplayRecipe: React.FunctionComponent<IDisplayRecipeProps> = props => {
 	const { id } = useParams<{ id: string }>();
-	const { data, onDeleteRecipe, onAddInShopCard } = props;
+	const { data, onDeleteRecipe, handleIngredients } = props;
 	const item = data.find(item => item.id === Number(id));
 	const { url } = useRouteMatch();
 
@@ -33,7 +33,7 @@ const DisplayRecipe: React.FunctionComponent<IDisplayRecipeProps> = props => {
 					<Link
 						to="/shopping-list"
 						className="dropdown-item"
-						onClick={() => onAddInShopCard(item.ingredients)}
+						onClick={() => handleIngredients(item.ingredients)}
 					>
 						Goto Shopping
 					</Link>
@@ -51,9 +51,9 @@ const DisplayRecipe: React.FunctionComponent<IDisplayRecipeProps> = props => {
 			</div>
 			<p className="mt-2">{item.description}</p>
 			<ul className="list-group">
-				{item.ingredients.map((i: any, index: any) => (
+				{Object.keys(item.ingredients).map((prop: any, index: any) => (
 					<li className="list-group-item" key={index}>
-						{i[0]} -- {i[1]}
+						{prop} -- {item.ingredients[prop]}
 					</li>
 				))}
 			</ul>
