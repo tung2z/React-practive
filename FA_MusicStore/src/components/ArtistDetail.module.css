@@ -1,0 +1,25 @@
+.artistCard {
+	border-radius: 5px;
+	width: 220px;
+	height: 350px;
+	margin-bottom: 30px;
+	background-color: #181818;
+	text-align: center;
+}
+
+.image {
+	margin: 10px 0;
+	display: inline-block;
+	width: 10vw;
+	height: 10vw;
+	border-radius: 50%;
+}
+
+.name {
+	background-color: #181818;
+	padding: 0 10px;
+}
+
+.link:hover {
+	text-decoration: none;
+}
