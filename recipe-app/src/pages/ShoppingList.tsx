@@ -2,41 +2,38 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import { IIngredient } from '../interfaces';
+import { useSelector, useDispatch } from 'react-redux';
 
-interface IShoppingListProps {
-	data: any;
-	handleIngredients: (values: any, action: string) => void;
-}
-interface IshoppingList {
-	[prop: string]: number;
-}
-
-const ShoppingList: React.FunctionComponent<IShoppingListProps> = props => {
-	const { data, handleIngredients } = props;
-
+const ShoppingList = () => {
+	const shoppingList = useSelector((state: any) => state.shoppingList);
+	const recipes = useSelector((state: any) => state.recipes);
+	console.log(recipes);
+	const dispatch = useDispatch();
 	const formik = useFormik({
 		initialValues: {
-			ingredient: '',
-			amount: '',
+			name: '',
+			quantity: 0,
 			showDelBtn: false,
 			active: -1,
 		},
 		validationSchema: yup.object().shape({
-			ingredient: yup.string().required('**Required'),
-			amount: yup.number().required('**Required'),
+			name: yup.string().required('**Required'),
+			quantity: yup.number().required('**Required'),
 		}),
 		onSubmit: values => {
-			let a: IshoppingList = {};
-			a[values.ingredient] = Number(values.amount);
-			handleIngredients(a, 'update');
+			dispatch({
+				type: 'ADD/UPDATE',
+				payload: { name: values.name, quantity: Number(values.quantity) },
+			});
 			formik.resetForm();
 		},
 	});
 
-	const onItemClick = (index: any, item: any) => {
+	const onItemClick = (index: number, ingredient: any) => {
 		formik.setValues({
-			ingredient: item,
-			amount: data[item],
+			name: ingredient.name,
+			quantity: ingredient.quantity,
 			showDelBtn: true,
 			active: index,
 		});
@@ -51,32 +48,32 @@ const ShoppingList: React.FunctionComponent<IShoppingListProps> = props => {
 			>
 				<div className="row mb-2">
 					<div className="col form-group mb-2 col-3">
-						<label htmlFor="ingredient">Ingredients</label>
+						<label htmlFor="name">Name</label>
 						<input
 							type="text"
-							name="ingredient"
+							name="name"
 							className="form-control"
-							id="ingredient"
+							id="name"
 							onChange={formik.handleChange}
-							value={formik.values.ingredient}
+							value={formik.values.name}
 						/>
-						{formik.errors.ingredient && formik.touched.ingredient && (
-							<small>{formik.errors.ingredient}</small>
+						{formik.errors.name && formik.touched.name && (
+							<small>{formik.errors.name}</small>
 						)}
 					</div>
 
 					<div className="col form-group mx-sm-3 mb-2 col-3">
-						<label htmlFor="amount">Amount</label>
+						<label htmlFor="quantity">Quantity</label>
 						<input
 							type="text"
-							name="amount"
+							name="quantity"
 							className="form-control"
-							id="amount"
+							id="quantity"
 							onChange={formik.handleChange}
-							value={formik.values.amount}
+							value={formik.values.quantity}
 						/>
-						{formik.errors.amount && formik.touched.amount && (
-							<small>{formik.errors.amount}</small>
+						{formik.errors.quantity && formik.touched.quantity && (
+							<small>{formik.errors.quantity}</small>
 						)}
 					</div>
 				</div>
@@ -89,7 +86,10 @@ const ShoppingList: React.FunctionComponent<IShoppingListProps> = props => {
 						className="btn btn-danger mr-1"
 						onClick={() => {
 							formik.resetForm();
-							handleIngredients(formik.values.ingredient, 'delete');
+							dispatch({
+								type: 'DELETE',
+								payload: formik.values.name,
+							});
 						}}
 					>
 						Delete
@@ -102,16 +102,16 @@ const ShoppingList: React.FunctionComponent<IShoppingListProps> = props => {
 
 			<hr />
 			<ul className="list-group">
-				{Object.keys(data).map((item: any, index: any) => (
+				{shoppingList.map((ingredient: IIngredient, index: any) => (
 					<li
 						className={`list-group-item ${
 							index === formik.values.active && 'active'
 						}`}
 						style={{ cursor: 'pointer' }}
 						key={index}
-						onClick={() => onItemClick(index, item)}
+						onClick={() => onItemClick(index, ingredient)}
 					>
-						{item} -- {data[item]}
+						{ingredient.name} -- {ingredient.quantity}
 					</li>
 				))}
 			</ul>

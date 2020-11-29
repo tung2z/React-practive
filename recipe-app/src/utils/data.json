@@ -4,35 +4,71 @@
 		"name": "Hamburger",
 		"imageURL": "https://images.unsplash.com/photo-1606075277057-a81e88cfd782?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1352&q=80",
 		"description": "Good",
-		"ingredients": {
-			"tomato": 2,
-			"orange": 1,
-			"banana": 4,
-			"apple": 3
-		}
+		"ingredients": [
+			{
+				"name": "tomato",
+				"quantity": 2
+			},
+			{
+				"name": "orange",
+				"quantity": 1
+			},
+			{
+				"name": "banana",
+				"quantity": 4
+			},
+			{
+				"name": "apple",
+				"quantity": 3
+			}
+		]
 	},
 	{
 		"id": 2,
 		"name": "dfsd",
 		"imageURL": "https://images.unsplash.com/photo-1605872111858-abec75e043fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
 		"description": "Good",
-		"ingredients": {
-			"tomato": 2,
-			"orange": 1,
-			"banana": 4,
-			"apple": 3
-		}
+		"ingredients": [
+			{
+				"name": "tomato",
+				"quantity": 2
+			},
+			{
+				"name": "orange",
+				"quantity": 1
+			},
+			{
+				"name": "banana",
+				"quantity": 4
+			},
+			{
+				"name": "apple",
+				"quantity": 3
+			}
+		]
 	},
 	{
 		"id": 3,
 		"name": "Kfg",
 		"imageURL": "https://images.unsplash.com/photo-1566361868544-6081eb4abef7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
 		"description": "Good",
-		"ingredients": {
-			"tomato": 2,
-			"orange": 1,
-			"banana": 4,
-			"apple": 3
-		}
+		"ingredients": [
+			{
+				"name": "tomato",
+				"quantity": 2
+			},
+			{
+				"name": "orange",
+				"quantity": 1
+			},
+			{
+				"name": "banana",
+				"quantity": 4
+			},
+			{
+				"name": "apple",
+				"quantity": 3
+			}
+		]
 	}
 ]

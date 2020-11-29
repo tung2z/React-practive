@@ -2,16 +2,10 @@ import React, { useState } from 'react';
 import { RecipeForm, RecipeCard, DisplayRecipe } from '../components';
 import { Switch, Link, Route, useRouteMatch } from 'react-router-dom';
 import './Recipe.css';
+import { useSelector } from 'react-redux';
 
-interface IRecipeProps {
-	data: any[];
-	onDeleteRecipe: (value: any) => void;
-	onHandleRecipe: (value: any) => void;
-	handleIngredients: (value: any, from: string) => void;
-}
-
-const Recipe: React.FunctionComponent<IRecipeProps> = props => {
-	const { data, onDeleteRecipe, onHandleRecipe, handleIngredients } = props;
+const Recipe = () => {
+	const recipes = useSelector((state: any) => state.recipes);
 	const { path, url } = useRouteMatch();
 	const [activeCard, setActiveCard] = useState(-1);
 	const handleActiveCard = (index: number) => {
@@ -20,6 +14,7 @@ const Recipe: React.FunctionComponent<IRecipeProps> = props => {
 
 	return (
 		<div className="row mt-5">
+			{console.log(recipes)}
 			<div className="col col-4">
 				<Link to={`${url}/new-recipe`} className="link">
 					<button type="button" className="btn btn-success">
@@ -28,7 +23,7 @@ const Recipe: React.FunctionComponent<IRecipeProps> = props => {
 				</Link>
 				<hr />
 				<ul className="list-group">
-					{data.map((item: any, index) => (
+					{recipes.map((item: any, index: any) => (
 						<Link
 							to={`${url}/${item.id}`}
 							className="link"
@@ -46,17 +41,13 @@ const Recipe: React.FunctionComponent<IRecipeProps> = props => {
 						<h2>Please select a Recipe!</h2>
 					</Route>
 					<Route path={`${path}/new-recipe`}>
-						<RecipeForm data={[]} onHandleRecipe={onHandleRecipe} />
+						<RecipeForm />
 					</Route>
 					<Route path={`${path}/:id/edit-recipe`}>
-						<RecipeForm data={data} onHandleRecipe={onHandleRecipe} />
+						<RecipeForm />
 					</Route>
 					<Route path={`${path}/:id`}>
-						<DisplayRecipe
-							data={data}
-							onDeleteRecipe={onDeleteRecipe}
-							handleIngredients={handleIngredients}
-						/>
+						<DisplayRecipe />
 					</Route>
 				</Switch>
 			</div>

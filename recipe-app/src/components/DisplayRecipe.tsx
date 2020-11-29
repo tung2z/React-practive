@@ -1,17 +1,14 @@
 import React from 'react';
 import { useParams, Link, useRouteMatch } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
-interface IDisplayRecipeProps {
-	data: any[];
-	onDeleteRecipe: (value: any) => void;
-	handleIngredients: (value: any, action: string) => void;
-}
-
-const DisplayRecipe: React.FunctionComponent<IDisplayRecipeProps> = props => {
+const DisplayRecipe = () => {
 	const { id } = useParams<{ id: string }>();
-	const { data, onDeleteRecipe, handleIngredients } = props;
-	const item = data.find(item => item.id === Number(id));
+	const recipes = useSelector((state: any) => state.recipes);
+	const item = recipes.find((recipe: any) => recipe.id === Number(id));
+	console.log(item);
 	const { url } = useRouteMatch();
+	const dispatch = useDispatch();
 
 	return (
 		<div>
@@ -33,7 +30,13 @@ const DisplayRecipe: React.FunctionComponent<IDisplayRecipeProps> = props => {
 					<Link
 						to="/shopping-list"
 						className="dropdown-item"
-						onClick={() => handleIngredients(item.ingredients, 'addAll')}
+						onClick={() => {
+							console.log(item.ingredients);
+							dispatch({
+								type: 'ADD_ALL',
+								payload: item.ingredients,
+							});
+						}}
 					>
 						Goto Shopping
 					</Link>
@@ -43,7 +46,12 @@ const DisplayRecipe: React.FunctionComponent<IDisplayRecipeProps> = props => {
 					<Link
 						to="/recipes"
 						className="dropdown-item"
-						onClick={() => onDeleteRecipe(id)}
+						onClick={() =>
+							dispatch({
+								type: 'DELETE_RECIPE',
+								payload: Number(id),
+							})
+						}
 					>
 						Delete Recipe
 					</Link>
@@ -51,9 +59,9 @@ const DisplayRecipe: React.FunctionComponent<IDisplayRecipeProps> = props => {
 			</div>
 			<p className="mt-2">{item.description}</p>
 			<ul className="list-group">
-				{Object.keys(item.ingredients).map((prop: any, index: any) => (
+				{item.ingredients.map((ingredient: any, index: any) => (
 					<li className="list-group-item" key={index}>
-						{prop} -- {item.ingredients[prop]}
+						{ingredient.name} -- {ingredient.quantity}
 					</li>
 				))}
 			</ul>
