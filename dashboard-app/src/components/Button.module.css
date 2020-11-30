@@ -1,0 +1,8 @@
+.button {
+	background: #512da8;
+	border-radius: 5px;
+	color: aliceblue;
+	height: fit-content;
+	width: 20vw;
+	padding: 10px 20px;
+}
