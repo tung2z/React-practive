@@ -26,9 +26,9 @@ const ArtistCard: React.FunctionComponent<IArtistCardProps> = props => {
 					alt="image"
 					className={style['image']}
 				/>
-				<h4 className={style['name']}>{data.name}</h4>
-				<p className={style['name']}>Popularity: {data.popularity}</p>
-				<p className={style['name']}>{data.genres.join(', ')}</p>
+				<h4 className={style.name}>{data.name}</h4>
+				<p className={style.name}>Popularity: {data.popularity}</p>
+				<p className={style.name}>{data.genres.join(', ')}</p>
 			</div>
 		</NavLink>
 	);
