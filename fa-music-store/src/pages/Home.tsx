@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-	InputGroup,
-	FormControl,
-	Button,
-	Row,
-	Col,
-} from 'react-bootstrap';
+import { InputGroup, FormControl, Button, Row, Col } from 'react-bootstrap';
 import { IArtist, ITrack } from '../interfaces';
 import styles from './Home.module.css';
 import { TracksDetail, ArtistsDetail } from '../components';
@@ -40,22 +34,18 @@ const Home = () => {
 
 	const onRightArrowClick = () => {
 		const input: any = document.querySelector('#searchInput');
-		let url = '';
+
 		if (artists.length === artistsPerPage) {
-			url = `https://api.spotify.com/v1/search?q=${
-				input.value
-			}&type=artist&limit=${artistsPerPage}&offset=${count + artistsPerPage}`;
+			Get(
+				`https://api.spotify.com/v1/search?q=${
+					input.value
+				}&type=artist&limit=${artistsPerPage}&offset=${count + artistsPerPage}`
+			)
+				.then(res => res.data.artists.items)
+				.then(data => setArtists(data))
+				.catch(err => console.log(err));
+			setCount(count + artistsPerPage);
 		}
-		if (count > 8) {
-			url = `https://api.spotify.com/v1/search?q=${
-				input.value
-			}&type=artist&limit=${artistsPerPage}&offset=${count - artistsPerPage}`;
-		}
-		Get(url)
-			.then(res => res.data.artists.items)
-			.then(data => setArtists(data))
-			.catch(err => console.log(err));
-		setCount(count + artistsPerPage);
 	};
 
 	const onLeftArrowClick = () => {
